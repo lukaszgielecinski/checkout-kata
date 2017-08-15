@@ -45,7 +45,7 @@ public class ProductPrice {
                 .sorted(Comparator.comparingInt(MultiUnitPrice::getNumberOfUnits))
                 .filter(multiUnitPrice -> multiUnitPrice.getNumberOfUnits() <= numberOfUnits)
                 .max(Comparator.comparingInt(MultiUnitPrice::getNumberOfUnits))
-                .orElseThrow(() -> new IllegalArgumentException("."));
+                .orElseThrow(() -> new IllegalArgumentException("At least 1 unit price should exist."));
     }
 
     public static class ProductPriceBuilder {
