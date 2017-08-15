@@ -79,4 +79,18 @@ public class ProductPriceTest {
         // then
         assertThat(price).isEqualTo(70);
     }
+
+    @Test
+    public void shouldReturnAMultiUnitPriceCombination() throws Exception {
+        // given
+        ProductPrice productPrice = new ProductPrice.ProductPriceBuilder("A", 20)
+                .addMultiUnitOffer(3, 50)
+                .addMultiUnitOffer(6, 80)
+                .createProductPrice();
+        // when
+        double price = productPrice.getPrice(11);
+
+        // then
+        assertThat(price).isEqualTo(170);
+    }
 }

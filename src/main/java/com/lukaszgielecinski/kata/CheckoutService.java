@@ -24,7 +24,12 @@ public class CheckoutService {
     public double checkout(List<Product> products) {
         validateProducts(products);
 
-        return 0;
+        Map<String, Long> countsPerProduct = products.stream()
+                .collect(Collectors.groupingBy(Product::getName, Collectors.counting()));
+
+        return countsPerProduct.entrySet().stream()
+                .mapToDouble(entry -> productPrices.get(entry.getKey()).getPrice(entry.getValue().intValue()))
+                .sum();
     }
 
     private void validateProducts(List<Product> products) {
@@ -33,10 +38,11 @@ public class CheckoutService {
                 .filter(product -> !productPrices.containsKey(product))
                 .distinct()
                 .collect(Collectors.toList());
+
         if (!unknownPriceProducts.isEmpty()) {
-            boolean singleItem = unknownPriceProducts.size() == 1;
+            String pluralSuffix = unknownPriceProducts.size() == 1 ? "" : "s";
             throw new IllegalArgumentException(String.format("Cannot find any price for the product%s '%s'.",
-                    singleItem ? "" : "s", StringUtils.join(unknownPriceProducts, ",")));
+                    pluralSuffix, StringUtils.join(unknownPriceProducts, ",")));
         }
     }
 }
